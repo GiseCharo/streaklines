@@ -1,4 +1,4 @@
-function dx=dGyreS(t,x)    
+function dx=DGyreS(t,x)    
 epsilon=0.1;
 amplitude=0.1;
 

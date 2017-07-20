@@ -1,14 +1,6 @@
 function U=couetteplanNSmatrix(t,CIx,CIy)
 
 %%couette plan computated over a matrix of points
-%%caso analitico estacionario couette plan
-%%U la moitié de la différence de vitesse entre les deux parois ;
-%%h moitié de la distance entre les deux parois
-%h=1;
-%U0=1;
-
-%U(:,:,1)=(U0/h)*CIy;
-%U(:,:,2)=0;
 
 %%couette plan non stationary
 h=1;

@@ -4,7 +4,7 @@ clear;close all
 %%deltat0 is the time interval of injection,
 x0(1,1)=1;x0(1,2)=0.5;
 t0=0;deltat0=0.01;t=5;
-vel='couetteplanNS';
+vel=@couetteplanNS;
 streakline1=streakline(x0,t0,deltat0,t,vel);
 
 figure()
