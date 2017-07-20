@@ -8,6 +8,7 @@ t0=0;deltat0=0.01;t=5;
 % vel=@DGyreS;
 % vel=@DGyreNS;
 vel=@couetteplanNS;
+vel=@DGyreNS;
 streakline1=streakline(x0,t0,deltat0,t,vel);
 
 figure()
