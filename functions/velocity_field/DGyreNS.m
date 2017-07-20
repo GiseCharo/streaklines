@@ -1,4 +1,4 @@
-function dx=doble(t,x)    
+function dx=DGyreNS(t,x)    
 epsilon=0.1;
 amplitude=0.1;
 omega=pi/5;

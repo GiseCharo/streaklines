@@ -6,7 +6,10 @@ t=10;deltat0=0.01;
 t0=0:deltat0:t;
 Vlag1=zeros(length(t0),2);
 Dtiphi1=zeros(length(t0),2);
-vel='DGyreNS';
+vel=@DGyreNS;
+%vel=@DGyreS;
+%vel=@couetteplanNS;
+%vel=@couetteplanS;
 for i=1:length(t0)
     Vlag1(i,:)=lagrangianvelocity(x0,t0(i),t,vel);
     Dtiphi1(i,:)=dtiphi(x0,t0(i),deltat0,t-t0(i),vel);
