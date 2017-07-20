@@ -5,7 +5,10 @@ x0(1,1)=1;x0(1,2)=0.5;
 t=10;deltat0=0.0005;
 t0=0:deltat0:t;
 tau=0;
-vel='DGyreNS';
+vel=@DGyreNS;
+%vel=@DGyreS;
+%vel=@couetteplanNS;
+%vel=@couetteplanS;
 for k=1:length(t0)-1
     
     if t0(k)+tau<=t

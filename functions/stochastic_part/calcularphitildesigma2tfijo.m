@@ -6,7 +6,10 @@ t=20; deltat0min=0.0001;
 nmax=20;
 t0=deltat0min:deltat0min:t;
 f=zeros(length(t0),2);
-vel='DGyreNS';
+vel=@DGyreNS;
+%vel=@DGyreS;
+%vel=@couetteplanNS;
+%vel=@couetteplanS;
 for i=1:length(t0)
     f(i,:)=phitilde(x0,t0(i),t-t0(i),vel);
 end
