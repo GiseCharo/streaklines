@@ -1,0 +1,54 @@
+clear all; clc;
+%%test compute bernoulli using the velocity field couette plan
+t01=0;t02=1;t=2;
+dX=1e-4*[1 1];
+X=-0.05:dX(1):0.05;
+Y=-0.05:dX(2):0.05;
+[CIx,CIy]=ndgrid(X,Y);
+
+U0=1;
+h=1;
+nu=1;
+omega=2*nu*((2*pi/h)^2);
+
+deltat0=(pi/omega)/1000;%% dt<<pi/omega
+
+%deltat0=deltat0/100;
+
+%%computation of the eulerian part
+[H1,H2]=prebernoullieulerian(CIx,CIy,t,deltat0,nu,dX);
+
+
+%%computation of the lagrangian part
+x0(1,1)=0.01;
+x0(1,2)=0.01;
+t0=t01:deltat0:t02;
+stline=zeros(length(t0),2);
+for i=1:length(t0)
+stline(i,:)=phi(x0,t0(i),t);
+end
+
+H1interp= griddedInterpolant({X,Y},H1(:,:),'nearest');
+H2xinterp= griddedInterpolant({X,Y},H2(:,:,1),'nearest');
+H2yinterp= griddedInterpolant({X,Y},H2(:,:,2),'nearest');
+
+H1streak=zeros(length(t0),1);
+H1streak=H1interp(stline(:,1),stline(:,2));
+H2streak=zeros(length(t0),2);
+H2streak(:,1)=H2xinterp(stline(:,1),stline(:,2));
+H2streak(:,2)=H2yinterp(stline(:,1),stline(:,2));
+
+Dtiphi=zeros(length(t0),2);
+for j=1:length(t0)-1
+    Dtiphi(j,:)=dtiphi(x0,t0(j),deltat0,t-t0(j));
+end
+Dtiphi(end,:)=(phi(x0,t0(end),t0(end)+t-t0(end))-phi(x0,t0(end-1)...
+    ,t0(end-1)+t-t0(end-1)))/deltat0;
+
+H1tilde=(sum(H1streak(:)))*deltat0;
+H2tilde=H2streak.*Dtiphi;
+H2tilde=(sum(H2tilde(:)))*deltat0;
+
+
+
+
