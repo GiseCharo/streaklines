@@ -15,8 +15,8 @@ end
 %% Chooose the right file
 big_T = floor(time/(1000*dt))+1;
 if big_T ~= big_T_pers
-    big_T
-    fprintf('Please wait, a new velocity file is loading.\n')
+%     big_T
+%     fprintf('Please wait, a new velocity file is loading.\n')
     if big_T < 1 || big_T > 20
         error('Outside the time interval')
     else
