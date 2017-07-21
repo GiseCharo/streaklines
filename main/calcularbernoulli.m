@@ -16,7 +16,8 @@ X=-0.05:dX(1):0.05;
 Y=-0.05:dX(2):0.05;
 [CIx,CIy]=ndgrid(X,Y);
 %%velocity field
-vel=@couetteplanNSmatrix;
+vel=@couetteplanNS;
+%vel=@couetteplanS;
 U0=1;h=1;nu=1;omega=2*nu*((2*pi/h)^2);
 
 deltat0=(pi/omega)/1000;%% dt<<pi/omega
@@ -28,12 +29,12 @@ deltat0=(pi/omega)/1000;%% dt<<pi/omega
 x0(1,1)=0.01;x0(1,2)=0.01;
 t0=t01:deltat0:t02;
 stline=zeros(length(t0),2);
-vel2='couetteplanNS';
+
 for i=1:length(t0)
-stline(i,:)=phi(x0,t0(i),t,vel2);
+stline(i,:)=phi(x0,t0(i),t,vel);
 end
 [H1streak,H2streak]=interpstreak(stline,H1,H2,X,Y,t0);
-Dtiphi=dtiphistreak(t0,x0,deltat0,t,vel2);
+Dtiphi=dtiphistreak(t0,x0,deltat0,t,vel);
 
 integH1=(sum(H1streak(:)))*deltat0;
 H2t=H2streak.*Dtiphi;

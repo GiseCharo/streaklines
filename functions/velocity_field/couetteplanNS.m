@@ -11,7 +11,6 @@ omega=2*nu*((2*pi/h)^2);
 %     end
 %     CIy = CIx(2);
 %     CIx(2)=[];
-% end
 
 dx(:,:,1)=(U0/sinh(2*pi))*(-sin((2*pi/h)*CIy).*cosh((2*pi/h)*CIy).*sin(omega*t)...
     +cos((2*pi/h)*CIy).*sinh((2*pi/h)*CIy).*cos(omega*t));
