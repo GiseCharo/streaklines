@@ -5,7 +5,7 @@ function dx=fct_wake_megaRAM(time,CIx,CIy)
 persistent dt x y N U_global
 
 %% First load
-if isempty(dt)
+if isempty(U_global)
     fprintf('Please wait, initialisation of the velocity field.\n')
     % 1st load
     load([ pwd '/data/wakeflow/file_DNS100_inc3d_2017_07_17_1'],...

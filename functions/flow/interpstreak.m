@@ -2,9 +2,9 @@ function [H1streak,H2streak]=interpstreak(stline,H1,H2,X,Y,t0)
 
 %%interpolates the H1,H2 along the streakline
 
-H1interp= griddedInterpolant({X,Y},H1(:,:),'nearest');
-H2xinterp= griddedInterpolant({X,Y},H2(:,:,1),'nearest');
-H2yinterp= griddedInterpolant({X,Y},H2(:,:,2),'nearest');
+H1interp= griddedInterpolant(X,Y,H1(:,:),'spline');
+H2xinterp= griddedInterpolant(X,Y,H2(:,:,1),'spline');
+H2yinterp= griddedInterpolant(X,Y,H2(:,:,2),'spline');
 
 H1streak=zeros(length(t0),1);
 H2streak=zeros(length(t0),2);
