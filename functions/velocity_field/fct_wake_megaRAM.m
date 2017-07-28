@@ -3,6 +3,8 @@ function dx=fct_wake_megaRAM(time,CIx,CIy)
 %
 
 persistent dt x y N U_global
+meth = 'cubic';
+% meth = 'linear';
 
 %% First load
 if isempty(U_global)
@@ -32,10 +34,25 @@ if t < 1 || t > 10*N
 end
 U_local = permute(U_global(:,:,t,:),[1 2 4 3]);
 
-
 %% Interpolation
+
 s=size(CIx);
-dx(:,1) =interp2(x,y,U_local(:,:,1)',CIx(:),CIy(:));
-dx(:,2) =interp2(x,y,U_local(:,:,2)',CIx(:),CIy(:));
+
+iii_outisde = CIx(:) <= 0 | abs(CIy(:)) > 6;
+% iii_outside_unknown = CIx > 20;
+dx(iii_outisde,1) = 1;
+dx(iii_outisde,2) = 0;
+
+dx(~iii_outisde,1) =interp2(x,y,U_local(:,:,1)',...
+    CIx(~iii_outisde),CIy(~iii_outisde),meth);
+dx(~iii_outisde,2) =interp2(x,y,U_local(:,:,2)',...
+    CIx(~iii_outisde),CIy(~iii_outisde),meth);
+
 dx = reshape(dx,[s 2]);
+
+% %% Interpolation
+% s=size(CIx);
+% dx(:,1) =interp2(x,y,U_local(:,:,1)',CIx(:),CIy(:));
+% dx(:,2) =interp2(x,y,U_local(:,:,2)',CIx(:),CIy(:));
+% dx = reshape(dx,[s 2]);
 
