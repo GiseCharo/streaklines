@@ -25,7 +25,7 @@ switch func2str(velocity)
         bound_CFL = dx/vmax;
         dt = min([bound_freq bound_CFL]);
         
-    case {'fct_wake','fct_wake_megaRAM'}
+    case {'fct_wake','fct_wake_megaRAM','fct_wake_megaRAM_2blocks'}
         load([ pwd '/data/wakeflow/file_DNS100_inc3d_2017_07_17_1'],'dt');
         
     otherwise

@@ -1,5 +1,5 @@
 function df=high_order_diff_along_streak(f,N,dt0)
-% Compute the derivative of f along the first dimension 
+% Compute the derivative of f along the first dimension
 % at the order N (<12)
 % The result will be of size size(f)
 %
@@ -13,29 +13,16 @@ type = 'standard';
 %type = 'optimized';
 
 d=ndims(f);
-% d=ndims(f)-2;
-% d2=size(f,2);
 Mt0 = size(f,1);
 
 idx='';
 for k_dim=2:d
     idx = [idx ',:'];
 end
-%
-% f = permute(f,[(1:ndims(f)-d) ndims(f)-d+1+mod((l-1):(l-2+d),d)]); % Put the k coordinate in first place
-% % m x d2 x Mt0 x MY
 df = zeros(size(f)); % m x d2 x Mt0 x MY
 
-% if d==2
-%     [ m, ~, Mt0, My] = size(f);
-%     MY=My;
-% else
-%     [ m, ~, Mt0, My, Mz] = size(f);
-%     MY=[My Mz];
-% end
 MY= size(f);
 MY= MY(2:end);
-% dt0=dX(l);
 
 if (Mt0 < 12 && floor((Mt0+1)/2)==(Mt0+1)/2) || Mt0 < 2
     error(['There are not enough points along the streakline in order ' ...
@@ -143,8 +130,6 @@ if Mt0 >= N
     da1= sum(da1,ndims(da1));  % (Mt0-12) x MY
     eval(['df((P+1):(end-P)' idx ')= 1/dt0 * da1 ;']);
 end
-
-% df = permute(df,[(1:ndims(df)-d) ndims(df)-d+1+mod((1-l):(d-l),d)]); % Put the first coordinate in first place again
 
 end
 
