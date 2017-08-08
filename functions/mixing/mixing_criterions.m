@@ -15,15 +15,15 @@ ratio_dt0_dt = 10
 %ratio_dt0_dt = 3
 
 % tau / (pseudo-)period of the Eulerian velocity
-ratio_tau_period = 4
+% ratio_tau_period = 4
 %ratio_tau_period = 2
-% ratio_tau_period = 0.5
+ ratio_tau_period = 0.5
 %ratio_tau_period = 0.25
 % ratio_tau_period = 1
 
 % Which plot should appear
 bool_back = false;
-bool_plot_kurtosis = false;
+bool_plot_kurtosis = true;
 bool_plot_OW = true;
 bool_plot_Mezic = true;
 bool_plot_vort = true;
