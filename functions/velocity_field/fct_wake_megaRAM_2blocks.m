@@ -10,7 +10,7 @@ meth = 'cubic';
 if isempty(U_global)
     fprintf('Please wait, initialisation of the velocity field.\n')
     % 1st load
-    idx_block = 1;
+    % idx_block = 1;
     load([ pwd '/data/wakeflow/file_DNS100_inc3d_2017_07_17_1'],...
         'dt','dX','U')
     % Grid
@@ -19,12 +19,23 @@ if isempty(U_global)
     y=(0:(My-1))*dX(2);
     y=y-mean(y);
     U_global = nan([Mx,My,10*N,d]);
-    U_global(:,:,1:N,:) = U; clear U;
-    for big_T = 2:10
+    
+%     U_global(:,:,1:N,:) = U; clear U;
+%     for big_T = 2:10
+%         load([ pwd '/data/wakeflow/file_DNS100_inc3d_2017_07_17_' ...
+%             num2str(big_T)],'U')
+%         U_global(:,:, N*(big_T-1) + (1:N),:) = U; clear U;
+%     end
+    
+    t = floor(time/dt)+1;
+    idx = ceil(t/(10*N));
+    idx_block =idx;
+    for big_T = (1:10)
         load([ pwd '/data/wakeflow/file_DNS100_inc3d_2017_07_17_' ...
-            num2str(big_T)],'U')
+            num2str(10*(idx-1)+big_T)],'U')
         U_global(:,:, N*(big_T-1) + (1:N),:) = U; clear U;
     end
+    
     fprintf('Initialisation done.\n')
 end
 
