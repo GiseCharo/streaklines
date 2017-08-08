@@ -34,6 +34,7 @@ if bool_plot
         'phi_grid_' ...
         '/Mx_' num2str(size(X0,1)) '_My_' num2str(size(X0,2)) '/'];
     mkdir(folder_simu);
+    fprintf('Backward advection \n');
 end
 
 %% Choice of time step (CFL)
@@ -41,7 +42,6 @@ dt = fct_time_step(velocity);
 
 %% Time of advection
 N_t = ceil((tfinal-t0)/dt);
-fprintf('Backward advection \n');
 
 %% Time loop
 for t=1:N_t
