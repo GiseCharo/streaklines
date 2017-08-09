@@ -17,8 +17,9 @@ grid_streaks=grid_of_streakline(X,Y,t0,deltat0,t,vel);
 Dt0phi = (grid_streaks(:,:,:,2:end)-grid_streaks(:,:,:,1:end-1))/deltat0;
 % clear grid_streaks;
 Dt0phi(:,:,:,end+1) = - vel(t,X,Y);
-norm_Dt0phi = sum(Dt0phi.^2,3); 
-%clear Dt0phi
+norm_Dt0phi = sqrt(sum(Dt0phi.^2,3)); 
+% norm_Dt0phi = sum(Dt0phi.^2,3); 
+% %clear Dt0phi
 kurt = squeeze(fct_kurtosis(permute(norm_Dt0phi,[4 1 2 3])));
 
 %% Pics on the sides

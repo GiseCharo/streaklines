@@ -24,7 +24,8 @@ Dtiphi = Dt0phi(:,:,:,1:end-1) + velocity_grid; clear Dt0phi
 
 % clear grid_streaks;
 Dtiphi(:,:,:,end+1) = 0;
-norm_Dtiphi = sum(Dtiphi.^2,3); clear Dtiphi
+norm_Dtiphi = sqrt(sum(Dtiphi.^2,3)); clear Dtiphi
+%norm_Dtiphi = sum(Dtiphi.^2,3); clear Dtiphi
 kurt = squeeze(fct_kurtosis(permute(norm_Dtiphi,[4 1 2 3])));
 
 
