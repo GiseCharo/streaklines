@@ -10,9 +10,9 @@ function  mixing_criterions(X,Y,t0ini,tfinal,velocity,bool_plot,nsub,T_plot)
 
 %% Parameters of the algortihm (to choose)
 % delta t_0 / delta t
-ratio_dt0_dt = 1
+%ratio_dt0_dt = 1
 %ratio_dt0_dt = 10
-%ratio_dt0_dt = 3
+ratio_dt0_dt = 3
 
 % tau / (pseudo-)period of the Eulerian velocity
 % ratio_tau_period = 4
@@ -93,8 +93,8 @@ switch func2str(velocity)
 end
 Xsub(iii_rm_sub)=[];Ysub(iii_rm_sub)=[];
 if bool_superimposed_pcl
-    T_ini_pcl = 10* tau_fixed;
-    % T_ini_pcl = tau_fixed;
+    %T_ini_pcl = 10* tau_fixed;
+    T_ini_pcl = tau_fixed;
     t0ini = t0ini + T_ini_pcl;
 %     t0ini = t0ini + T_plot;
 end
