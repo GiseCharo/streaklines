@@ -10,16 +10,16 @@ function  mixing_criterions(X,Y,t0ini,tfinal,velocity,bool_plot,nsub,T_plot)
 
 %% Parameters of the algortihm (to choose)
 % delta t_0 / delta t
-% ratio_dt0_dt = 1
-ratio_dt0_dt = 10
+ratio_dt0_dt = 1
+%ratio_dt0_dt = 10
 %ratio_dt0_dt = 3
 
 % tau / (pseudo-)period of the Eulerian velocity
 % ratio_tau_period = 4
 %ratio_tau_period = 2
- ratio_tau_period = 0.5
+% ratio_tau_period = 0.5
 %ratio_tau_period = 0.25
-% ratio_tau_period = 1
+ ratio_tau_period = 1
 
 % Which plot should appear
 bool_back = false;
@@ -63,20 +63,38 @@ deltat0 = ratio_dt0_dt * dt;
 %% Times studied
 N_t0 = ceil((tfinal-t0ini)/dt);
 
+%% Grid
+X=X0;Y=Y0;
+Xsub = X(1:nsub:end,1:nsub:end);
+Ysub = Y(1:nsub:end,1:nsub:end);
+X0sub = X0(1:nsub:end,1:nsub:end);
+Y0sub = Y0(1:nsub:end,1:nsub:end);
+
 %% Time of advection
 switch func2str(velocity)
     case {'fct_wake_megaRAM_2blocks','fct_wake_megaRAM','fct_wake',}
+        iii_rm_sub = abs(Y0sub)>0.5;
+        %Xsub(abs(Y0sub)>0.5)=[];Ysub(abs(Y0sub)>0.5)=[];
         tau_fixed = 5;
+        axref = [ 0 20 -6 6 ];
     case {'DGyreS','DGyreNS',}
+        R=0.1;
+         iii_rm_sub = ( (X0sub-0.5).^2 + (Y0sub-0.5).^2 > R^2 ) & ...
+                      ( (X0sub-1.5).^2 + (Y0sub-0.5).^2 > R^2 ) ;
+        % figure;imagesc(iii_rm_sub');axis xy; axis equal
         tau_fixed = 10;
+        axref = [ 0 2 0 1 ];
     case {'couetteplanS','couetteplanNS'}
         h=1;
         nu=1;
         omega=2*nu*((2*pi/h)^2);
         tau_fixed = 2*pi/omega;
+        axref = [ 0 1 0 1 ];
 end
+Xsub(iii_rm_sub)=[];Ysub(iii_rm_sub)=[];
 if bool_superimposed_pcl
-    T_ini_pcl = tau_fixed;
+    T_ini_pcl = 10* tau_fixed;
+    % T_ini_pcl = tau_fixed;
     t0ini = t0ini + T_ini_pcl;
 %     t0ini = t0ini + T_plot;
 end
@@ -86,11 +104,6 @@ N_tau = ceil(tau_fixed/dt);
 
 
 %%
-X=X0;Y=Y0;
-Xsub = X(1:nsub:end,1:nsub:end);
-Ysub = Y(1:nsub:end,1:nsub:end);
-Y0sub = Y0(1:nsub:end,1:nsub:end);
-Xsub(abs(Y0sub)>0.5)=[];Ysub(abs(Y0sub)>0.5)=[];
 
 v = velocity(t0ini,X0,Y0);
 vort = vort_mat(v,dX);
@@ -99,15 +112,15 @@ figure(3)
 subplot(2,1,1)
 plot(Xsub(:),Ysub(:),'.');axis equal; axis xy;
 % if t==1
-axref=axis;
-switch func2str(velocity)
-    case {'fct_wake_mega','fct_wake_megaRAM'}
-        axref(1)=0;
-end
-axref(1) = axref(1) - ratio_increase*(axref(2)-axref(1));
-axref(2) = axref(2) + ratio_increase*(axref(2)-axref(1));
-axref(3) = axref(3) - ratio_increase*(axref(4)-axref(3));
-axref(4) = axref(4) + ratio_increase*(axref(4)-axref(3));
+% axref=axis;
+% switch func2str(velocity)
+%     case {'fct_wake_mega','fct_wake_megaRAM'}
+%         axref(1)=0;
+% end
+% axref(1) = axref(1) - ratio_increase*(axref(2)-axref(1));
+% axref(2) = axref(2) + ratio_increase*(axref(2)-axref(1));
+% axref(3) = axref(3) - ratio_increase*(axref(4)-axref(3));
+% axref(4) = axref(4) + ratio_increase*(axref(4)-axref(3));
 % end
 axis(axref);
 title('Lagrangian particles');
@@ -123,6 +136,7 @@ caxis(caxref);
 % else
 %     caxis(caxref);
 % end
+drawnow
 
 folder_simu = [pwd '/images/' func2str(velocity) '/' ...
     'ratio_dt0_dt_' num2str(ratio_dt0_dt) ...
