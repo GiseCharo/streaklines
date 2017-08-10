@@ -1,16 +1,13 @@
 function df=high_order_diff_along_streak(f,N,dt0)
 % Compute the derivative of f along the first dimension
-% at the order N (<12)
+% with a N-point scheme (N=<7 and N odd)
 % The result will be of size size(f)
 %
 
 P = (N-1)/2;
-if N > 13 || floor(P)~=P
+if N < 3 || N > 7 || floor(P)~=P
     error('incorrect order in the high-order finite difference scheme');
 end
-
-type = 'standard';
-%type = 'optimized';
 
 d=ndims(f);
 Mt0 = size(f,1);
@@ -30,92 +27,58 @@ if (Mt0 < 12 && floor((Mt0+1)/2)==(Mt0+1)/2) || Mt0 < 2
 end
 
 
-if strcmp(type,'standard')
-    % Filter for interrior
-    FD13p = [ 1/5544 -3/1155 1/56 -5/63 15/56 -6/7 0 ...
-        6/7 -15/56 5/63 -1/56 3/1155 -1/5544 ]';
-    % Filters for the boundaries
-    FD11p = [ -1/1260 5/504 -5/84 5/21 -5/6 0 5/6 -5/21 5/84 -5/504 1/1260 ]';
-    FD9p = [ 1/280 -4/105 1/5 -4/5 0 4/5 -1/5 4/105 -1/280 ]';
-    FD7p = [ -1/60  3/20 -3/4 0 3/4 -3/20 1/60 ]';
-    FD5p = [ 1/12  -2/3 0 2/3 -1/12 ]';
-    FD3p = [ -1/2 0 1/2 ]';
-    FD2p = [ -1 1]';
-elseif strcmp(type,'optimized')
-    % Filter for interrior
-    FD13p = [ +0.001456501759 ...
-        -0.011169294114 ...
-        +0.045246480208 ...
-        -0.133442885327 ...
-        +0.337048393268 ...
-        -0.907646591371 ...
-        0              ...
-        +0.907646591371 ...
-        -0.337048393268 ...
-        +0.133442885327 ...
-        -0.045246480208 ...
-        +0.011169294114 ...
-        -0.001456501759 ]';
-    
-    % Filters for the boundaries
-    FD11p = [ -0.002484594688 ...
-        +0.020779405824 ...
-        -0.090320001280 ...
-        +0.286511173973 ...
-        -0.872756993962 ...
-        0              ...
-        +0.872756993962 ...
-        -0.286511173973 ...
-        +0.090320001280 ...
-        -0.020779405824 ...
-        +0.002484594688 ]';
-    
-    FD9p = [  +0.007650904064 ...
-        -0.059463584768 ...
-        +0.244678631765 ...
-        -0.841570125482 ...
-        0               ...
-        +0.841570125482 ...
-        -0.244678631765 ...
-        +0.059463584768 ...
-        -0.007650904064 ]';
-    
-    FD7p = [ -1/60  3/20 -3/4 0 3/4 -3/20 1/60 ]';
-    FD5p = [ 1/12  -2/3 0 2/3 -1/12 ]';
-    FD3p = [ -1/2 0 1/2 ]';
-    FD2p = [ -1 1]';
+switch N
+    case 7
+        % Filter for interrior
+        filter = [ -1/60  3/20 -3/4 0 3/4 -3/20 1/60 ]';
+        % Filters for the left boundary
+        filterleft_bound = [ -49/20 6 -15/2 20/3 -15/4 6/5 -1/6 ]';
+    case 5
+        % Filter for interrior
+        filter = [ 1/12  -2/3 0 2/3 -1/12 ]';
+        % Filters for the left boundary
+        filterleft_bound = [ -25/12 4 -3 4/3 -1/4 ]';
+    case 3
+        % Filter for interrior
+        filter = [ -1/2 0 1/2 ]';
+        % Filters for the left boundary
+        filterleft_bound = [-3/2 2 -1/2 ]';
+    otherwise
+        error('This number of points is not encoded.')
 end
-filters={FD2p FD3p FD5p FD7p FD9p FD11p FD13p};
+% Filters for the right boundary
+filterright_bound = - filterleft_bound(end:-1:1) ;
 
 % Boundaries
 
-% Boundaries pixels
-neighb1 = zeros([ 2 MY 2]);
-
-eval(['neighb1(1,:' idx ')= permute( f([1 2]' idx ') ,' ...
-    '[ ndims(f)+1 2:ndims(f) 1]);']);
-eval(['neighb1(2,:' idx ')= permute( f([end-1 end]' idx ') ,' ...
-    '[ ndims(f)+1 2:ndims(f) 1]);']);
-filter1=permute(filters{1},[2:ndims(neighb1) 1 ]); % 1 x (1 x)*length(MY) x len_filter
-da1 = bsxfun(@times,neighb1, filter1); % 2 x MY x len_filter
-clear neighb1;
-da1= sum(da1,ndims(da1)); % 2 x MY
-eval(['df([1 end]' idx ')= 1/dt0 * da1;']);
-
-% From 2 to P pixels far from the boundaries
-for k=2:min(P,Mt0/2)
+% From 1 to P pixels far from the left boundary
+for k=1:min(P,Mt0/2)
     % Get neighborhoods
-    len_filter = 2*(k-1)+1;
-    neighb1 = zeros([ 2 MY len_filter]);
-    eval(['neighb1(1,:' idx ')= permute( f(1:len_filter' idx ') ,' ...
-        '[ ndims(f)+1 2:ndims(f) 1]);']);
-    eval(['neighb1(2,:' idx ')= permute( f((end-len_filter+1):end' idx ') ,' ...
-        '[ ndims(f)+1 2:ndims(f) 1]);']);
-    filter1=permute(filters{k},[2:ndims(neighb1) 1 ]); % 1 x (1 x)*length(MY) x len_filter
+    len_filter = N;
+    %     len_filter = 2*(k-1)+1;
+    neighb1 = zeros([ MY len_filter]);
+    eval(['neighb1(:' idx ')= permute( f(k:(k-1+len_filter)' idx ') ,' ...
+        '[ 2:ndims(f) 1]);']);
+    filter1=permute(filterleft_bound,[2:ndims(neighb1) 1 ]); % 1 x (1 x)*length(MY) x len_filter
     da1 = bsxfun(@times,neighb1, filter1); % 2 x MY x len_filter
     clear neighb1;
     da1= sum(da1,ndims(da1)); % 2 x MY
-    eval(['df([k (Mt0-(k-1)) ]' idx ')= 1/dt0 * da1;']);
+    eval(['df(k' idx ')= 1/dt0 * da1;']);
+end
+
+% From 1 to P pixels far from the right boundary
+for k=1:min(P,Mt0/2)
+    % Get neighborhoods
+    len_filter = N;
+    %     len_filter = 2*(k-1)+1;
+    neighb1 = zeros([ MY len_filter]);
+    eval(['neighb1(:' idx ')= permute( f((end-len_filter+1):end' idx ') ,' ...
+        '[ 2:ndims(f) 1]);']);
+    filter1=permute(filterright_bound,[2:ndims(neighb1) 1 ]); % 1 x (1 x)*length(MY) x len_filter
+    da1 = bsxfun(@times,neighb1, filter1); % 2 x MY x len_filter
+    clear neighb1;
+    da1= sum(da1,ndims(da1)); % 2 x MY
+    eval(['df( Mt0-(k-1) ' idx ')= 1/dt0 * da1;']);
 end
 
 if Mt0 >= N
@@ -124,7 +87,7 @@ if Mt0 >= N
     len_filter = N;
     neighb1 = get_neighborhood_mat_1D( f, len_filter,idx); % Mt0 x MY x len_filter
     eval(['neighb1 = neighb1( (P+1):(end-P)' idx ',:);']); % (Mt0-12) x MY x len_filter
-    filter1=permute(filters{P+1},[2:ndims(neighb1) 1 ]); % 1 x (1 x)*length(MY) x len_filter
+    filter1=permute(filter,[2:ndims(neighb1) 1 ]); % 1 x (1 x)*length(MY) x len_filter
     da1 = bsxfun(@times,neighb1, filter1); % (Mt0-12) x MY x len_filter
     clear neighb1;
     da1= sum(da1,ndims(da1));  % (Mt0-12) x MY
