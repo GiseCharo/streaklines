@@ -60,9 +60,9 @@ for k=1:min(P,Mt0/2)
     eval(['neighb1(:' idx ')= permute( f(k:(k-1+len_filter)' idx ') ,' ...
         '[ 2:ndims(f) 1]);']);
     filter1=permute(filterleft_bound,[2:ndims(neighb1) 1 ]); % 1 x (1 x)*length(MY) x len_filter
-    da1 = bsxfun(@times,neighb1, filter1); % 2 x MY x len_filter
+    da1 = bsxfun(@times,neighb1, filter1); % MY x len_filter
     clear neighb1;
-    da1= sum(da1,ndims(da1)); % 2 x MY
+    da1= sum(da1,ndims(da1)); % MY
     eval(['df(k' idx ')= 1/dt0 * da1;']);
 end
 
@@ -72,7 +72,7 @@ for k=1:min(P,Mt0/2)
     len_filter = N;
     %     len_filter = 2*(k-1)+1;
     neighb1 = zeros([ MY len_filter]);
-    eval(['neighb1(:' idx ')= permute( f((end-len_filter+1):end' idx ') ,' ...
+    eval(['neighb1(:' idx ')= permute( f((1-k+end-len_filter+1):(1-k+end)' idx ') ,' ...
         '[ 2:ndims(f) 1]);']);
     filter1=permute(filterright_bound,[2:ndims(neighb1) 1 ]); % 1 x (1 x)*length(MY) x len_filter
     da1 = bsxfun(@times,neighb1, filter1); % 2 x MY x len_filter
