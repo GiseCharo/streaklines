@@ -384,8 +384,9 @@ if nargin == 0
     HV.bool = true;
     
     if HV.bool
-        % HV.order=4;
-        HV.order=8;
+%         % HV.order=4;
+%         HV.order=8;
+        HV.order=2;
     end
     
     % Smagorinsky-like diffusivity/viscosity or Hyper-viscosity

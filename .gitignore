@@ -5,3 +5,5 @@ graphics*
 *.DS_Store
 *.eps
 *.png
+*.mat
+wave_lum-master/images/*
