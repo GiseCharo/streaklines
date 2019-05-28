@@ -123,7 +123,9 @@ if isfield(model.advection, 'forcing') && model.advection.forcing.bool
     U_caract = U_caract /3;
     
     %     model.advection.U_caract = sqrt(mean(w(:).^2));
-    model.advection.forcing.on_T =  U_caract / model.advection.forcing.Ly;
+    model.advection.forcing.on_T =  3 * ...
+        U_caract / model.advection.forcing.Ly;
+%     model.advection.forcing.on_T =  U_caract / model.advection.forcing.Ly;
     
     %     model.advection.forcing.on_T = model.advection.forcing.on_T /10;
     

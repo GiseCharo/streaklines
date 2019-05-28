@@ -28,7 +28,8 @@ stochastic_wave = false
 smooth_LS_current = false;
 
 % Resolution of the large_scale current
-LS_resolution_wave = 64;
+LS_resolution_wave = 128;
+% LS_resolution_wave = 64;
     
 % Periodic boundary conditions for wave group position
 wave_periodic_boundary_conditions = true;
@@ -127,7 +128,8 @@ end
 forcing_type = 'Spring';
 
 % Amplitude of the forcing
-ampli_forcing = 10;
+ampli_forcing = 30;
+% ampli_forcing = 10;
 % ampli_forcing = 1;
 
 % Frequency of the forcing

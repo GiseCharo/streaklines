@@ -27,9 +27,15 @@ else
 end
 clear dX dX2
 
+if isfield(advection, 'forcing') && advection.forcing.bool
+    bound4 = (1/advection.forcing.on_T)/100;
+else
+    bound4= inf;
+end
+
 % Minimum of the CFL
-dt = min([bound1 bound2 bound3]);
-clear bound1 bound2 bound3
+dt = min([bound1 bound2 bound3 bound4]);
+clear bound1 bound2 bound3 bound4
 if advection.sto
     dt=dt/2;
     % Further constraint on dt due to the use of a (simple) Euler scheme

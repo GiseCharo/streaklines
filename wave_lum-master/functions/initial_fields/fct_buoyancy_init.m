@@ -29,6 +29,7 @@ model.grid.MX=MX;
 %% Spatial buoyancy field
 switch model.type_data
     case 'Zero'
+%         b_S = eps*ones(MX);
         b_S = zeros(MX);
     case 'Vortices'
         b_S = init_Vortices(model,x,y);
