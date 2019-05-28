@@ -3,3 +3,5 @@ test*
 data*
 graphics*
 *.DS_Store
+*.eps
+*.png
