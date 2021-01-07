@@ -1,0 +1,25 @@
+function fi=five_points_along_streak(phi,velocity,t)
+vlag=velocity(t,phi(:,1),phi(:,2));
+vlag=permute(vlag,[1 3 2]);
+fi=zeros(size(phi,1),4,2);
+fi(3:end-2,1,:)= vlag(2:end-3,:)-vlag(3:end-2,:);
+fi(3:end-2,2,:)= vlag(4:end-1,:)-vlag(3:end-2,:);
+fi(3:end-2,3,:)= vlag(1:end-4,:)-vlag(3:end-2,:);
+fi(3:end-2,4,:)= vlag(5:end,:)-vlag(3:end-2,:);
+fi(1,1,:)=vlag(2,:)-vlag(1,:);
+fi(1,2,:)=vlag(3,:)-vlag(1,:);
+fi(1,3,:)=vlag(4,:)-vlag(1,:);
+fi(1,4,:)=vlag(5,:)-vlag(1,:);
+fi(2,1,:)=vlag(3,:)-vlag(2,:);
+fi(2,2,:)=vlag(4,:)-vlag(2,:);
+fi(2,3,:)=vlag(5,:)-vlag(2,:);
+fi(2,4,:)=vlag(6,:)-vlag(2,:);
+fi(end-1,1,:)=vlag(end-2,:)-vlag(end-1,:);
+fi(end-1,2,:)=vlag(end-3,:)-vlag(end-1,:);
+fi(end-1,3,:)=vlag(end-4,:)-vlag(end-1,:);
+fi(end-1,4,:)=vlag(end-5,:)-vlag(end-1,:);
+fi(end,1,:)=vlag(end-1,:)-vlag(end,:);
+fi(end,2,:)=vlag(end-2,:)-vlag(end,:);
+fi(end,3,:)=vlag(end-3,:)-vlag(end,:);
+fi(end,4,:)=vlag(end-4,:)-vlag(end,:);
+end
