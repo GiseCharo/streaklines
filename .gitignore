@@ -8,3 +8,4 @@ graphics*
 *.mat
 wave_lum-master/images/*
 *.asv
+*.fig
